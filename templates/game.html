@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>|Tetris|</title>
+</head>
+
+<body class="bg-gray-900">
+    <header>
+        <div class="flex flex-row justify-between items-center bg-gray-900 px-4 py-2">
+            <div class="text-purple-700 font-bold text-3xl">Tetris</div>
+            <div class="text-teal-500 font-medium text-xl">
+              Score: <span class="font-bold">0</span> | Level: <span class="font-bold">0</span>
+            </div>
+          </div>          
+    </header>
+    <div class="w-full h-full flex flex-col items-center justify-center mt-[20%]">
+        <div class="font-bold text-3xl mb-12">
+            <h1 class="text-fuchsia-500 text-6xl">
+                Tetris online
+            </h1>
+        </div>
+        <div class="w-52 h-10">
+            <input type="button" value="Click to play" id="startGame" class="w-full h-full appearance-none cursor-pointer text-center bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 font-medium rounded-lg">
+        </div>
+      </div> 
+
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../game_logic/board.js"></script>
+</body>
+
+</html>
