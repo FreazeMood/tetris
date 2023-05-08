@@ -7,4 +7,5 @@ play_btn.addEventListener('click', () => {
     gameSection.classList.remove('hidden');
     let board = new Board(GRID_SETTINGS);
     board.createNewBoard();
+    console.log(board.board);
 })
