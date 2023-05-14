@@ -153,7 +153,6 @@ class Board {
         }
     }
 
-
     drawCurrentTetromino() {
         const { current_row, current_col, current_shape, color } = this.current_tetromino;
         const start_col = current_col, end_col = start_col + current_shape[0].length - 1;
@@ -189,7 +188,7 @@ class Board {
     }
 
     rotate() {
-        const { current_row, current_shape } = this.current_tetromino;
+        const { current_row, current_col, current_shape } = this.current_tetromino;
         const rotated_shape = Array.from({ length: current_shape[0].length }, () => Array(current_shape.length).fill(0));
 
         if (current_row > 0) {
@@ -201,11 +200,30 @@ class Board {
             for (let i = 0; i < rotated_shape.length; i++) {
                 rotated_shape[i].reverse();
             }
-            this.clearCurrentTetromino();
-            this.current_tetromino.current_shape = rotated_shape;
-            this.drawCurrentTetromino();
+
+            if (this.isValidRotation(current_row, current_col, rotated_shape)){
+                this.clearCurrentTetromino();
+                this.current_tetromino.current_shape = rotated_shape;
+                this.drawCurrentTetromino();
+            }
         }
     }
+    
+    isValidRotation(row, col, shape) {
+        // get the dimensions of the rotated shape
+        const rotated_rows = shape[0].length;
+        const rotated_cols = shape.length;
+      
+        // check if any part of the rotated shape goes out of bounds
+        for (let i = 0; i < rotated_rows; i++) {
+          for (let j = 0; j < rotated_cols; j++) {
+            if (shape[j][i] !== 0 && (col + i < 0 || col + i >= this.columns || row + j >= this.rows)) {
+              return false;
+            }
+          }
+        }
+        return true;
+      }
 
     checkLineCompleted() {
         this.board.map((row, idx) => {
