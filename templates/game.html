@@ -32,8 +32,10 @@
     <main class="mt-12 hidden" id="game">
         <div class="flex flex-col justify-center items-center">
             <div class="flex flex-row items-start text-teal-500 mb-4 text-xl">
-                Score: <span class="font-bold mr-12 score">0</span>
-                Level: <span class="font-bold level">0</span>
+                Score: <span class="font-bold score">0</span>
+            </div>
+            <div class="w-52 h-10">
+                <input type="button" value="Restart game" id="restart-btn" class="hidden w-full h-full appearance-none cursor-pointer text-center bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 font-medium rounded-lg">
             </div>
             <canvas id="gameboard" style="border: solid purple 2px;"></canvas>
         </div>

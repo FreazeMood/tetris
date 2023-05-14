@@ -4,6 +4,7 @@ class Board {
         this.cell_size = cell_size;
         this.rows = rows;
         this.score = 0;
+        this.canvas_id = canvas_id;
         this.scoreElement = [...document.getElementsByClassName('score')];
         this.columns = columns;
         this.board = this.createNewBoard();
@@ -11,7 +12,7 @@ class Board {
         this.shapes = []; // stores all the objects of Shape;
         this.drawBoard();
         this.current_tetromino = this.generateTetromino();
-        this.game_loop = setInterval(() => this.updateBoard(), 300);
+        this.game_loop = setInterval(() => this.updateBoard(), 800);
         document.addEventListener('keyup', (e) => {
             e.key === 'ArrowLeft' ? this.moveLeft() : null;
             e.key === 'ArrowRight' ? this.moveRight() : null;
@@ -66,9 +67,7 @@ class Board {
         this.current_tetromino = this.generateTetromino();
 
         if (!this.isMoveValid(this.current_tetromino.current_row, this.current_tetromino.current_col, this.current_tetromino.current_shape)) {
-            clearInterval(this.game_loop);
-            !localStorage.getItem('max-score') ? localStorage.setItem('max-score', this.score) : null;
-            parseInt(localStorage.getItem('max-score')) < this.score ? localStorage.setItem('max-score', this.score) : null;
+            this.gameOver();
         }
 
     }
@@ -249,5 +248,24 @@ class Board {
             }
         }
         this.checkLineCompleted();
+    }
+
+    gameOver() {
+        clearInterval(this.game_loop);
+        !localStorage.getItem('max-score') ? localStorage.setItem('max-score', this.score) : null;
+        parseInt(localStorage.getItem('max-score')) < this.score ? localStorage.setItem('max-score', this.score) : null;
+        
+        const restart_btn = document.getElementById('restart-btn'),
+        canvas = document.getElementById(this.canvas_id);
+        
+        canvas.classList.add('hidden');
+        restart_btn.classList.remove('hidden');
+
+        restart_btn.addEventListener('click', () => {
+            restart_btn.classList.add('hidden'); 
+            canvas.classList.remove('hidden');
+            let board = new Board(GRID_SETTINGS);
+            board.createNewBoard();
+        })
     }
 }
