@@ -10,20 +10,14 @@ class Board {
         this.ctx = this.createCanvas(canvas_id);
         this.shapes = []; // stores all the objects of Shape;
         this.drawBoard();
-        this.tetrominos = [];
-        this.current_tetromino_id = 1;
         this.current_tetromino = this.generateTetromino();
         this.game_loop = setInterval(() => this.updateBoard(), 300);
         document.addEventListener('keyup', (e) => {
-
-            if (e.key === 'ArrowLeft') {
-                this.moveLeft();
-            } else if (e.key === 'ArrowRight') {
-                this.moveRight();
-            } else if (e.key === 'ArrowUp') {
-                this.rotate();
+            e.key === 'ArrowLeft' ? this.moveLeft(): null;
+            e.key === 'ArrowRight' ? this.moveRight(): null;
+            e.key === 'ArrowUp' ? this.rotate(): null
             }
-        });
+        );
                 
     }
     
@@ -60,20 +54,23 @@ class Board {
         this.clearCurrentTetromino();
         const { current_row, current_col, current_shape } = this.current_tetromino;
         const next_row = current_row + 1;
+        
         if (this.isMoveValid(next_row, current_col, current_shape)) {
             this.drawCurrentTetromino();
-            this.current_tetromino.current_row = next_row;
-        } else {
-            this.freezeTetromino();
-            this.score += 34;
-            this.updateScore();
-            this.current_tetromino = this.generateTetromino();
-            if (!this.isMoveValid(this.current_tetromino.current_row, this.current_tetromino.current_col, this.current_tetromino.current_shape)) {
-                clearInterval(this.game_loop);
-                !localStorage.getItem('max-score') ? localStorage.setItem('max-score', this.score) : null;
-                parseInt(localStorage.getItem('max-score')) < this.score ? localStorage.setItem('max-score', this.score) : null; 
-            }
+            return this.current_tetromino.current_row = next_row;
         }
+        
+        this.freezeTetromino();
+        this.score += 34;
+        this.updateScore();
+        this.current_tetromino = this.generateTetromino();
+        
+        if (!this.isMoveValid(this.current_tetromino.current_row, this.current_tetromino.current_col, this.current_tetromino.current_shape)) {
+            clearInterval(this.game_loop);
+            !localStorage.getItem('max-score') ? localStorage.setItem('max-score', this.score): null;
+            parseInt(localStorage.getItem('max-score')) < this.score ? localStorage.setItem('max-score', this.score): null; 
+        }
+
     }
     
     generateTetromino() {
@@ -81,7 +78,12 @@ class Board {
         randomColorIdx = Math.floor(Math.random() * TETROMINO_COLORS.length),
         start_col = 4,
         start_row = 0,
-        tetromino = {id: this.current_tetromino_id, current_shape: POSSIBLE_TETROMINOS[randomTetrominoIdx], current_row: start_row, current_col: start_col, color: TETROMINO_COLORS[randomColorIdx]};
+        tetromino = { 
+            current_shape: POSSIBLE_TETROMINOS[randomTetrominoIdx],
+            current_row: start_row,
+            current_col: start_col,
+            color: TETROMINO_COLORS[randomColorIdx]
+        };
         return tetromino;
     }
 
@@ -103,7 +105,6 @@ class Board {
             this.current_tetromino.current_col = new_col;
             this.drawCurrentTetromino();
         }
-
     }
 
     isCellEmpty(row, col) {
@@ -167,7 +168,6 @@ class Board {
         // updates the state of the falling tetromino
         for (let row = current_row; row < current_shape.length + current_row; row++) {
             for (let col = start_col; col <= end_col; col++) {
-
                 if (current_row - current_shape.length === (this.board.length - current_shape.length - 1)) {
                     return this.current_tetromino = this.generateTetromino();
                 }
@@ -190,12 +190,8 @@ class Board {
             }
         }
         this.checkLineCompleted();
-        this.tetrominos.push(this.current_tetromino)
-        this.current_tetromino_id += 1;
-        console.log(this.tetrominos);
     }
     
-
     updateScore() {
         this.scoreElement.map(e => e.innerHTML = this.score);
     }
@@ -235,17 +231,16 @@ class Board {
 
       deleteLine(row) {
         this.shapes[row].map(elem => elem.create_or_update('rgb(17, 24, 39)', this.cell_size));
-        for (let i = row; i >= 0; i--) {
-            for (let j = 0; j < this.columns; j++) {
-              if (this.board[i][j] === 1) {
-                this.board[i][j] = 0;
-                this.shapes[i][j].create_or_update('rgb(17, 24, 39)', this.cell_size);
-                this.board[i + 1][j] = 1;
-                this.shapes[i + 1][j].create_or_update('yellow', this.cell_size);
+        for (let r = row; r >= 0; r--) {
+            for (let c = 0; c < this.columns; c++) {
+              if (this.board[r][c] === 1) {
+                this.board[r][c] = 0;
+                this.shapes[r][c].create_or_update('rgb(17, 24, 39)', this.cell_size);
+                this.board[r + 1][c] = 1;
+                this.shapes[r + 1][c].create_or_update('yellow', this.cell_size);
               }
             }
           } 
         this.checkLineCompleted();         
     }
-
 }
