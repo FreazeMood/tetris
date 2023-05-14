@@ -224,6 +224,16 @@ class Board {
 
       deleteLine(row) {
         this.shapes[row].map(elem => elem.create_or_update('rgb(17, 24, 39)', this.cell_size));
-      }
+        for (let i = row; i >= 0; i--) {
+            for (let j = 0; j < this.columns; j++) {
+              if (this.board[i][j] === 1) {
+                this.board[i][j] = 0;
+                this.shapes[i][j].create_or_update('rgb(17, 24, 39)', this.cell_size);
+                this.board[i + 1][j] = 1;
+                this.shapes[i + 1][j].create_or_update('yellow', this.cell_size);
+              }
+            }
+          }          
+    }
 
 }
