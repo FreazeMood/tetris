@@ -76,8 +76,6 @@ class Board {
         }
     }
     
-
-
     generateTetromino() {
         const randomTetrominoIdx = Math.floor(Math.random() * POSSIBLE_TETROMINOS.length),
         randomColorIdx = Math.floor(Math.random() * TETROMINO_COLORS.length),
@@ -213,14 +211,19 @@ class Board {
         }
       }
       
-    //   checkLineCompleted() {
-    //     this.board.map((row, idx) => {
-    //         if (row.every(e => e === 1)) {
-    //             this.score += 100  
-    //             this.updateScore();
-    //             this.board[idx].fill(0);
-    //         }    
-    //     })
-    //   }
+      checkLineCompleted() {
+        this.board.map((row, idx) => {
+            if (row.every(e => e === 1)) {
+                this.score += 100;
+                this.updateScore();
+                this.board[idx].fill(0);
+                this.deleteLine(idx)
+            }    
+        })
+      }
+
+      deleteLine(row) {
+        this.shapes[row].map(elem => elem.create_or_update('rgb(17, 24, 39)', this.cell_size));
+      }
 
 }
