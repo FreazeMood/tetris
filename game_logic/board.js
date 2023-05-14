@@ -85,9 +85,9 @@ class Board {
     }
 
     moveLeft() {
-        const {current_row, current_col, current_shape} = this.current_tetromino;
+        const {current_row, current_col} = this.current_tetromino;
         const new_col = current_col - 1;
-        if(this.isCellEmpty(current_row, new_col)){
+        if(current_row > 0 && this.isCellEmpty(current_row, new_col)){
             this.clearCurrentTetromino();
             this.current_tetromino.current_col = new_col;
             this.drawCurrentTetromino();
@@ -97,7 +97,7 @@ class Board {
     moveRight() {
         const {current_row, current_col, current_shape} = this.current_tetromino;
         const new_col = current_col + 1;
-        if(this.isCellEmpty(current_row, new_col + current_shape[0].length - 1)){
+        if(current_row > 0 && this.isCellEmpty(current_row, new_col + current_shape[0].length - 1)){
             this.clearCurrentTetromino();
             this.current_tetromino.current_col = new_col;
             this.drawCurrentTetromino();
