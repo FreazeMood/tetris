@@ -13,7 +13,7 @@ class Board {
         this.tetrominos = [];
         this.current_tetromino_id = 1;
         this.current_tetromino = this.generateTetromino();
-        this.game_loop = setInterval(() => this.updateBoard(), 100);
+        this.game_loop = setInterval(() => this.updateBoard(), 300);
         document.addEventListener('keyup', (e) => {
 
             if (e.key === 'ArrowLeft') {
@@ -70,8 +70,8 @@ class Board {
             this.current_tetromino = this.generateTetromino();
             if (!this.isMoveValid(this.current_tetromino.current_row, this.current_tetromino.current_col, this.current_tetromino.current_shape)) {
                 clearInterval(this.game_loop);
-                console.log(this.board);
-                alert('Game over!');
+                !localStorage.getItem('max-score') ? localStorage.setItem('max-score', this.score) : null;
+                parseInt(localStorage.getItem('max-score')) < this.score ? localStorage.setItem('max-score', this.score) : null; 
             }
         }
     }
@@ -129,18 +129,29 @@ class Board {
     }
     
     
+    countTetrominoPieces() {
+        const {current_shape} = this.current_tetromino
+        let counter = 0;
+        current_shape.map((e) => {
+            e.forEach(piece => piece === 1 ? counter += 1: null);
+        });
+        return counter
+    }
+
     clearCurrentTetromino() {
         const {current_row, current_col, current_shape} = this.current_tetromino;
         const start_col = current_col,
-        end_col = start_col + current_shape[0].length - 1;
+        end_col = start_col + current_shape[0].length - 1,
+        pieces = this.countTetrominoPieces();
+        let removed_pieces = 0;
 
         if (current_row > 0 && current_row !== this.board.length) {
             for (let row = current_row-1; row < current_shape.length + current_row; row++) {
                 for (let col = start_col; col <= end_col; col++) {
-
-                    if (this.board[row][col] !== 0) {
+                    if (this.board[row][col] !== 0 && removed_pieces !== pieces) {
                         this.board[row][col] = 0;
                         this.shapes[row][col].create_or_update('rgb(17, 24, 39)', this.cell_size);
+                        removed_pieces += 1;
                     }
                 }
             }
@@ -219,7 +230,7 @@ class Board {
                 this.board[idx].fill(0);
                 this.deleteLine(idx)
             }    
-        })
+        });
       }
 
       deleteLine(row) {
@@ -233,7 +244,8 @@ class Board {
                 this.shapes[i + 1][j].create_or_update('yellow', this.cell_size);
               }
             }
-          }          
+          } 
+        this.checkLineCompleted();         
     }
 
 }

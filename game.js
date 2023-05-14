@@ -9,3 +9,8 @@ play_btn.addEventListener('click', () => {
     board.createNewBoard();
     console.log(board.board);
 })
+
+window.onload = () => {
+    const highest_score = localStorage.getItem('max-score');
+    [...document.getElementsByClassName('max-score')].map(e => highest_score ? e.innerHTML = highest_score : e.innerHTML = 0);
+}
