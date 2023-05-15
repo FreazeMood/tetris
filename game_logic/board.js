@@ -12,7 +12,7 @@ class Board {
         this.shapes = []; // stores all the objects of Shape;
         this.drawBoard();
         this.current_tetromino = this.generateTetromino();
-        this.game_loop = setInterval(() => this.updateBoard(), 800);
+        this.game_loop = setInterval(() => this.updateBoard(), 300);
         document.addEventListener('keyup', (e) => {
             e.key === 'ArrowLeft' ? this.moveLeft() : null;
             e.key === 'ArrowRight' ? this.moveRight() : null;
