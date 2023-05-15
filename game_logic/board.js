@@ -48,11 +48,9 @@ class Board {
 
             }
         }
-        console.log(this.shapes);
     }
 
     updateBoard() {
-        debugger
         this.clearCurrentTetromino();
         const { current_row, current_col, current_shape } = this.current_tetromino;
         const next_row = current_row + 1;
