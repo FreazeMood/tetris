@@ -17,7 +17,6 @@ class Board {
             e.key === 'ArrowLeft' ? this.moveLeft() : null;
             e.key === 'ArrowRight' ? this.moveRight() : null;
             e.key === 'ArrowUp' ? this.rotate() : null;
-            e.key === 'ArrowDown' ? this.dropTetromino() : null;
         }
         );
 
@@ -259,17 +258,4 @@ class Board {
         parseInt(localStorage.getItem('max-score')) < this.score ? localStorage.setItem('max-score', this.score) : null;
         location.reload();
     }
-
-    dropTetromino() {
-
-        if (this.current_tetromino.current_row > this.current_tetromino.current_shape.length - 1) {
-            const { current_shape } = this.current_tetromino
-            while(this.current_tetromino.current_shape === current_shape) {
-                this.updateBoard();
-            }
-        }
-
-      }
-    
-      
 }
