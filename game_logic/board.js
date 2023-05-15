@@ -17,6 +17,7 @@ class Board {
             e.key === 'ArrowLeft' ? this.moveLeft() : null;
             e.key === 'ArrowRight' ? this.moveRight() : null;
             e.key === 'ArrowUp' ? this.rotate() : null;
+            e.key === 'ArrowDown' ? this.dropTetromino() : null;
         }
         );
 
@@ -52,6 +53,7 @@ class Board {
     }
 
     updateBoard() {
+        debugger
         this.clearCurrentTetromino();
         const { current_row, current_col, current_shape } = this.current_tetromino;
         const next_row = current_row + 1;
@@ -182,14 +184,11 @@ class Board {
         this.checkLineCompleted();
     }
 
-    updateScore() {
-        this.scoreElement.map(e => e.innerHTML = this.score);
-    }
-
+    
     rotate() {
         const { current_row, current_col, current_shape } = this.current_tetromino;
         const rotated_shape = Array.from({ length: current_shape[0].length }, () => Array(current_shape.length).fill(0));
-
+        
         if (current_row > 0) {
             for (let i = 0; i < current_shape.length; i++) {
                 for (let j = 0; j < current_shape[i].length; j++) {
@@ -199,7 +198,7 @@ class Board {
             for (let i = 0; i < rotated_shape.length; i++) {
                 rotated_shape[i].reverse();
             }
-
+            
             if (this.isValidRotation(current_row, current_col, rotated_shape)){
                 this.clearCurrentTetromino();
                 this.current_tetromino.current_shape = rotated_shape;
@@ -212,18 +211,18 @@ class Board {
         // get the dimensions of the rotated shape
         const rotated_rows = shape[0].length;
         const rotated_cols = shape.length;
-      
+        
         // check if any part of the rotated shape goes out of bounds
         for (let i = 0; i < rotated_rows; i++) {
-          for (let j = 0; j < rotated_cols; j++) {
-            if (shape[j][i] !== 0 && (col + i < 0 || col + i >= this.columns || row + j >= this.rows)) {
-              return false;
+            for (let j = 0; j < rotated_cols; j++) {
+                if (shape[j][i] !== 0 && (col + i < 0 || col + i >= this.columns || row + j >= this.rows)) {
+                    return false;
+                }
             }
-          }
         }
         return true;
-      }
-
+    }
+    
     checkLineCompleted() {
         this.board.map((row, idx) => {
             if (row.every(e => e === 1)) {
@@ -234,38 +233,43 @@ class Board {
             }
         });
     }
-
+    
     deleteLine(row) {
         this.shapes[row].map(elem => elem.create_or_update('rgb(17, 24, 39)', this.cell_size));
         for (let r = row; r >= 0; r--) {
             for (let c = 0; c < this.columns; c++) {
                 if (this.board[r][c] === 1) {
                     this.board[r][c] = 0;
+                    this.shapes[r + 1][c].create_or_update(this.shapes[r][c].fill_color, this.cell_size);
                     this.shapes[r][c].create_or_update('rgb(17, 24, 39)', this.cell_size);
                     this.board[r + 1][c] = 1;
-                    this.shapes[r + 1][c].create_or_update('yellow', this.cell_size);
                 }
             }
         }
         this.checkLineCompleted();
+    }
+    
+    updateScore() {
+        this.scoreElement.map(e => e.innerHTML = this.score);
     }
 
     gameOver() {
         clearInterval(this.game_loop);
         !localStorage.getItem('max-score') ? localStorage.setItem('max-score', this.score) : null;
         parseInt(localStorage.getItem('max-score')) < this.score ? localStorage.setItem('max-score', this.score) : null;
-        
-        const restart_btn = document.getElementById('restart-btn'),
-        canvas = document.getElementById(this.canvas_id);
-        
-        canvas.classList.add('hidden');
-        restart_btn.classList.remove('hidden');
-
-        restart_btn.addEventListener('click', () => {
-            restart_btn.classList.add('hidden'); 
-            canvas.classList.remove('hidden');
-            let board = new Board(GRID_SETTINGS);
-            board.createNewBoard();
-        })
+        location.reload();
     }
+
+    dropTetromino() {
+
+        if (this.current_tetromino.current_row > this.current_tetromino.current_shape.length - 1) {
+            const { current_shape } = this.current_tetromino
+            while(this.current_tetromino.current_shape === current_shape) {
+                this.updateBoard();
+            }
+        }
+
+      }
+    
+      
 }

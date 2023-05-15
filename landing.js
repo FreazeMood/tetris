@@ -5,9 +5,8 @@ gameSection = document.getElementById('game');
 play_btn.addEventListener('click', () => {
     launcher.classList.add('hidden'); 
     gameSection.classList.remove('hidden');
-    let board = new Board(GRID_SETTINGS);
-    board.createNewBoard();
-})
+    new Board(GRID_SETTINGS);
+});
 
 window.onload = () => {
     const highest_score = localStorage.getItem('max-score');

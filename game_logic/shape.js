@@ -3,6 +3,7 @@ class Shape {
         this.ctx = ctx;
         this.col = col;
         this.row = row;
+        this.fill_color = '';
     }
 
     create_or_update(fill_color, cell_size) {
@@ -12,6 +13,7 @@ class Shape {
 
         // Draw the cell
         this.ctx.fillStyle = fill_color;
+        this.fill_color = fill_color;
         this.ctx.fillRect(x, y, cell_size, cell_size);
         this.ctx.strokeStyle = 'purple';
         this.ctx.strokeRect(x, y, cell_size, cell_size);
